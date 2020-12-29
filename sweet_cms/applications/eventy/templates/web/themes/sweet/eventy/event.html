@@ -1,0 +1,139 @@
+{% extends themed("eventy/base.html", 'web') %}
+{% block title %}Eventy / {{ event.name }}{% endblock %}
+{% block styles %}
+    <style>
+        html, body, .wrapper, .h-100 {
+            height: 100%;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .w-100 {
+            width: 100%;
+        }
+    </style>
+    <style>
+        .video-js .vjs-current-time { display: none; }
+        .video-js .vjs-time-divider { display: none; }
+        .video-js .vjs-duration { display: none; }
+        .video-js .vjs-remaining-time { display: none; }
+
+        .video-js .vjs-mute-control { display: block; }
+        .video-js .vjs-volume-menu-button { display: block; }
+        .video-js .vjs-volume-bar { display: block; }
+        .video-js .vjs-progress-control { display: none; }
+        .video-js .vjs-play-control {display: none}
+        .video-js .vjs-picture-in-picture-control {margin-left: auto}
+        {#.video-js .vjs-fullscreen-control {: right}#}
+    </style>
+{% endblock %}
+{% block content %}
+    <section class="container h-100" id="vue-app">
+        <div class="row row-center h-100">
+            <div class="column column-100 text-center">
+                <div v-if="status == 1"><video
+                        id="player"
+                        class="video-js w-100"
+                        preload="auto"
+                        width="640"
+                        height="444"
+                        data-setup="{}"
+                        controls
+                        muted>
+                    <p class="vjs-no-js">
+                        To view this video please enable JavaScript, and consider upgrading to a
+                        web browser that
+                        <a href="https://videojs.com/html5-video-support/" target="_blank"
+                        >supports HTML5 video</a
+                        >
+                    </p>
+                    <source :src="current_src" type="video/mp4" />
+                </video>
+                </div>
+                <p v-if="status != 1"><b><u><strong>{{ event.name }}</strong></u></b><br><u>{{ event.description }}</u><br>
+                    No Programme is streaming right now</p>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('static', filename='shared/js/vue.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='shared/js/axios.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        var app = new Vue({
+            el: '#vue-app',
+            delimiters: ['[[', ']]'],
+            data: {
+                programme_streaming: null,
+                status: 2,
+                player: null,
+                current_time: 0,
+                current_src: ''
+            },
+            mounted : function () {
+                const vue = this;
+                socket.on('connect', function() {
+                    socket.emit('join_event', {event: '{{ event.id }}'});
+                });
+                socket.on("programme_started", function (data) {
+                    console.log("Event Started")
+                    vue.loadSrc();
+                });
+                this.dispose_player();
+                this.loadSrc();
+
+            }, watch: {
+                status: function (val) {
+                    vue = this;
+                    if (val === 1){
+                        requestAnimationFrame(function() {
+                            requestAnimationFrame( function () {
+                                vue.player = videojs.getPlayer('player');
+                                if (! vue.player){
+                                    vue.player = videojs('player')
+                                }
+                                requestAnimationFrame( function () {
+                                    requestAnimationFrame( function () {
+                                        vue.player.currentTime(vue.current_time);
+                                        vue.player.play();
+                                        vue.player.on('ended', function () {
+                                            vue.loadSrc();
+                                        })
+                                    })
+                                })
+                            });
+                        });
+                    }
+                    else {
+                        this.dispose_player()
+                    }
+                }
+            },
+            methods: {
+                loadSrc() {
+                    const vue = this;
+                    const url = "{{ url_for('api.eventy_event_stream', event_slug=event.slug) }}";
+                    axios.get(url).then(
+                        function (response) {
+                            if (response.data){
+                                vue.status = response.data.status;
+                                vue.current_time = response.data.current_duration;
+                                vue.current_src = response.data.stream_url;
+                            }
+                        }
+                    );
+                },
+                dispose_player(){
+                    if (this.player){
+                        this.player.dispose()
+                    }
+                    let player = videojs.getPlayer('player');
+                    if (player){
+                        player.dispose()
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

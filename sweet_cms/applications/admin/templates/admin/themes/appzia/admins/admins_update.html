@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+{% import 'admin/macros.html' as macros %}
+{% block title %}CMS - Dashboard / Admins / Update Admin  {% endblock %}
+{% block content %}
+    <div class="">
+        <div class="page-header-title">
+            <h3 class="page-title"> <a class="btn btn-outline-info" href="{{ url_for('admin.admin_list') }}"><i class="fas fa-arrow-left"></i></a> Dashboard / Admins</h3>
+        </div>
+    </div>
+    <div class="page-content-wrapper ">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Basic example -->
+                <div class="col-lg-12 ">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <h3 class="m-t-0 pl-2 mr-auto">Update Admin </h3>
+                                <a href="#" class="swal-confirm btn btn-danger mr-2" swal-warn="Are you sure you want to delete this admin ?">Delete</a>
+                                <form class="swal-submit" action="{{ url_for('admin.admin_delete', admin_id=admin.id) }}" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                                </form>
+                            </div>
+
+                            <form action="{{ url_for('admin.admin_update',admin_id=admin.id )}}"  method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                                {{ macros.render_form_field(form.username) }}
+                                {{ macros.render_form_field(form.email) }}
+                                {{ macros.render_form_field(form.first_name) }}
+                                {{ macros.render_form_field(form.last_name) }}
+                                {{ macros.render_form_field(form.password) }}
+                                {{ macros.render_form_field(form.confirm) }}
+                                <div class="form-group text-center">
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light">Update Admin</button>
+                                </div>
+                            </form>
+                        </div><!-- card-body -->
+                    </div> <!-- card -->
+                </div> <!-- col-->
+            </div>
+        </div>
+    </div>
+{% endblock %}

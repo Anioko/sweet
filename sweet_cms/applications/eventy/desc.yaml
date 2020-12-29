@@ -1,0 +1,7 @@
+name: Eventy
+version: 0.01
+prefix: '/events'
+license_key: ''
+db_prefix: 'eventy_'
+side_menu: 'eventy/includes/side_menu.html'
+has_models: true

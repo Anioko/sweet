@@ -1,0 +1,5 @@
+name: User
+version: 0.01
+prefix: '/users'
+license_key: ''
+has_models: true

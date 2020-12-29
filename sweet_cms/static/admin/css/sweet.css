@@ -1,0 +1,21 @@
+.sweet-side-menu {
+    background: #2a323c;
+}
+.sweet-details-pane {
+    background: #2a323c;
+}
+.sweet-side-menu a.list-group-item, button.list-group-item {
+    color: #2a323c;
+}
+.sweet-side-menu .list-group-item{
+    background-color: #ffffff;
+    font-size: 12px;
+}
+.sweet-side-menu .list-group-item:hover {
+    color: #ffffff;
+    background-color: #323c48;
+}
+.sweet-side-menu .list-group-item.active {
+    color: #ffffff;
+    background-color: #04a2b3;
+}

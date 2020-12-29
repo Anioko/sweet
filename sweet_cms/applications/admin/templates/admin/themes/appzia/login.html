@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Admin Dashboard" name="description" />
+    <meta content="ThemeDesign" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title> CMS - Login</title>
+
+    <link rel="shortcut icon" href="{{static_url_for('static', filename='admin/images/favicon.ico') }}">
+    <link href="{{static_url_for('static', filename='admin/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{static_url_for('static', filename='admin/css/icons.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{static_url_for('static', filename='admin/css/style.css') }}"  rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="accountbg"></div>
+<div class="wrapper-page">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="text-center m-t-0 m-b-15">
+                <span class="logo"><img src="{{ url_for('static', filename='admin/images/logo_white.png') }}" alt="logo-img"></span>
+            </h3>
+            <h4 class="text-muted text-center m-t-0"><b>Sign In</b></h4>
+            <form class="form-horizontal m-t-20" action="{{ url_for('admin.login') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                <div class="form-group">
+                    <div class="col-12">
+                        {{ form.username(placeholder="Username",required="required", class_="form-control") }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-12">
+                        {{ form.password(placeholder="Password",required="required", class_="form-control") }}
+                    </div>
+                </div>
+                <div class="form-group text-center m-t-40">
+                    <div class="col-12">
+                        <button class="btn btn-primary btn-block btn-lg waves-effect waves-light" type="submit">Log In</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

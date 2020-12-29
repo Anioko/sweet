@@ -1,0 +1,5 @@
+name: Admin
+version: 0.01
+prefix: '/admin'
+license_key: ''
+has_models: true

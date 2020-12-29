@@ -1,0 +1,7 @@
+<li class="has_sub">
+    <a href="javascript:void(0);" class="waves-effect {% if 'admin.events' in request.endpoint %}subdrop{% endif %}"><i class="mdi mdi-calendar"></i> <span>Eventy</span> <span class="float-right"><i class="mdi mdi-plus"></i></span></a>
+    <ul class="list-unstyled">
+        <li class="{% if 'admin.events' in request.endpoint %}active{% endif %}"><a href="{{ url_for('admin.events') }}" class="{% if 'admin.events' in request.endpoint %}active{% endif %}"><i class="mdi mdi-view-list"></i><span>Events</span></a></li>
+        <li><a href="ui-buttons.html"><i class="mdi mdi-settings"></i><span>Settings</span></a></li>
+    </ul>
+</li>

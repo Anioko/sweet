@@ -1,0 +1,361 @@
+{% extends themed("base.html", 'admin') %}
+{% import themed('macros.html', 'admin') as macros %}
+{% block title %}Sweet CMS -  Eventy / Events  {% endblock %}
+{% block styles %}
+    <link href="{{url_for('static', filename='admin/css/sweet.css') }}"  rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.3.2/main.min.css">
+{% endblock %}
+{% block content %}
+    <div class="">
+        <div class="page-header-title">
+            <h3 class="page-title w-100">Dashboard / Eventy / Events</h3>
+        </div>
+    </div>
+    <div class="page-content-wrapper" id="vue-app">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-3 col-sm-12">
+                                    <div>
+                                        <button data-toggle="modal" data-target="#add-event-modal" class="waves-effect btn btn-success w-100" > Add new Event</button>
+                                        <div id="add-event-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="custom-width-modalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title m-0" id="custom-width-modalLabel">Add an Event</h4>
+                                                        <button type="button" class="close text-white" data-dismiss="modal" aria-hidden="true">×</button>
+                                                    </div>
+                                                    <form action="{{ url_for('api.eventy_event_add')}}"  method="POST" v-on:submit="submitForm()">
+                                                        <div class="modal-body">
+                                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                                                            {{ macros.render_form_field_for_vue(form.name) }}
+                                                            {{ macros.render_form_field_for_vue(form.description) }}
+                                                            {{ macros.render_form_field_for_vue(form.start_time) }}
+                                                            {{ macros.render_form_field_for_vue(form.end_time) }}
+                                                            {{ macros.render_form_field_for_vue(form.offset) }}
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light waves-effect" data-dismiss="modal">Close</button>
+                                                            <button class="btn btn-primary waves-effect waves-light" type="submit">Submit</button>
+                                                        </div>
+                                                    </form>
+                                                </div><!-- /.modal-content -->
+                                            </div><!-- /.modal-dialog -->
+                                        </div><!-- /.modal -->
+                                    </div>
+                                    <hr>
+                                    <div v-if="events" class="sweet-side-menu" style="min-height: 50vh;height: 50vh">
+                                        <div :style="events.pagination.pages > 1 ? 'height: 82%; overflow-y: scroll;margin-bottom: 4%' : 'height: 100%; overflow-y: scroll;'">
+                                            <div v-if="events" class="list-group">
+                                                <a v-for="event in events.data" href="#" :class="'list-group-item list-group-item-action '+ (selectedEvent==event ? 'active' : '')" v-on:click="changeSelected(event)">[[ event.name ]]</a>
+                                            </div>
+                                            <div class="ml-auto text-center" v-else>
+                                                <p class="pt-5">No Events here Yet</p>
+                                            </div>
+                                        </div>
+                                        <div v-if="events.pagination.pages > 1" class="text-center m-auto" style="height: 10%">
+                                            <ul class="pagination pagination-sm d-inline-flex m-0">
+                                                <li :class="events.pagination.hasPrev ? 'page-item' : 'page-item disabled'"> <a href="#" class="page-link" v-on:click="paginate('prev')"> <i class="fa fa-angle-left"></i> </a> </li>
+                                                <li v-for="page in events_page_list" :class="events_current_page == page ? 'page-item active' : 'page-item'"> <a href="#" class="page-link" v-on:click="paginate(page)">[[page]]</a></li>
+                                                <li :class="events.pagination.hasNext ? 'page-item' : 'page-item disabled'"> <a href="#" class="page-link" v-on:click="paginate('next')"> <i class="fa fa-angle-right"></i> </a> </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8 col-md-9 col-sm-12" >
+                                    <ul class="nav nav-tabs nav-justified" role="tablist" v-if="selectedEvent">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="home-tab-2" data-toggle="tab" href="#home-2" role="tab" aria-controls="home-2" aria-selected="false">
+                                                <span class="d-block d-sm-none"><i class="fa fa-home"></i></span>
+                                                <span class="d-none d-sm-block">Event Programmes</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="profile-tab-2" data-toggle="tab" href="#profile-2" role="tab" aria-controls="profile-2" aria-selected="true">
+                                                <span class="d-block d-sm-none"><i class="fa fa-user"></i></span>
+                                                <span class="d-none d-sm-block">Event Settings</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="message-tab-2" data-toggle="tab" href="#message-2" role="tab" aria-controls="message-2" aria-selected="false">
+                                                <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                                                <span class="d-none d-sm-block">Event Managers</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="setting-tab-2" data-toggle="tab" href="#setting-2" role="tab" aria-controls="setting-2" aria-selected="false">
+                                                <span class="d-block d-sm-none"><i class="fa fa-cog"></i></span>
+                                                <span class="d-none d-sm-block">Event Calendar</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="btn btn-link btn-sm" target="_blank" :href="'{{ url_for('eventy.event', event_slug=0) }}'.replace('0', selectedEvent.slug)"><i class="fa fa-globe"></i></a>
+                                        </li>
+
+                                    </ul>
+                                    <div class="sweet-details-pane overflow-hidden" style="min-height: 50vh;height: 50vh">
+                                        <div v-if="selectedEvent" class="h-100 overflow-hidden">
+                                            <div class="tab-content h-100 overflow-hidden">
+                                                <div class="tab-pane fade show active h-100 overflow-hidden" id="home-2" role="tabpanel" aria-labelledby="home-tab-2">
+                                                    <div class="p-1" style="overflow-y: scroll; height: 100%;">
+                                                        <div class="pl-2 pr-2">
+                                                            <h4>Programmes List<a data-toggle="modal" data-target="#add-programme-modal" class="btn btn-success btn-sm float-right" href="#">New Programme</a><br><br></h4>
+                                                            <hr class="pt-0 mt-0">
+                                                            <div id="add-programme-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="custom-width-modalLabel" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h4 class="modal-title m-0" id="custom-width-modalLabel">Add a Programme</h4>
+                                                                            <button type="button" class="close text-white" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                        </div>
+                                                                        <form action="{{ url_for('api.eventy_programme_add')}}"  method="POST" v-on:submit="submitForm()">
+                                                                            <div class="modal-body">
+                                                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                                                                                <input type="hidden" :value="selectedEvent.id" name="event_id">
+                                                                                {{ macros.render_form_field_for_vue(programme_form.name) }}
+                                                                                {{ macros.render_form_field_for_vue(programme_form.description) }}
+                                                                                {{ macros.render_form_field_for_vue(programme_form.start_time) }}
+                                                                                {{ macros.render_form_field_for_vue(programme_form.end_time) }}
+                                                                                {{ macros.render_form_field_for_vue(programme_form.programme_type) }}
+                                                                                {{ macros.render_form_field_for_vue(programme_form.offset) }}
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-light waves-effect" data-dismiss="modal">Close</button>
+                                                                                <button class="btn btn-primary waves-effect waves-light" type="submit">Submit</button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div><!-- /.modal-content -->
+                                                                </div><!-- /.modal-dialog -->
+                                                            </div><!-- /.modal -->
+                                                        </div>
+                                                        <div v-for="programme in selectedEvent.programmes" class="card flex-row flex-wrap align-content-center">
+                                                            <div class="card-header border-0">
+                                                                <p>[[programme.start_time]]</p>
+                                                                <hr>
+                                                                <p>[[programme.end_time]]</p>
+                                                            </div>
+                                                            <div class="card-block px-2">
+                                                                <h4 class="card-title">[[ programme.name ]]</h4>
+                                                                <p class="card-text" v-if="programme.programme_type == 'live'"><span class=" badge badge-info">Live Streaming Programme</span><br></p>
+                                                                <p class="card-text" v-if="programme.programme_type == 'videos'"><span class=" badge badge-info">Local Videos Programme</span><br></p>
+                                                                <p class="card-text">[[ programme.description ]]</p>
+                                                                <a :href="'{{ url_for('admin.events_programme_view', programme_id=0) }}'.replace(0, '')+'/'+programme.id" class="btn btn-primary">Go To Programme</a>
+                                                                <br>
+                                                                <br>
+                                                            </div>
+                                                            <div class="w-100"></div>
+                                                        </div>
+                                                        <div v-if="!selectedEvent.programmes.length" class="card flex-row flex-wrap align-content-center">
+                                                            <p class="text-center w-100 pt-3">No Programmes added to this event yet</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade  h-100 overflow-hidden p-1" id="setting-2" role="tabpanel" aria-labelledby="setting-tab-2">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <h4 class="m-t-5 m-b-15">Created Events</h4>
+                                                        </div>
+
+                                                        <div id='calendar' class="col-lg-12"></div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade h-100 overflow-hidden" id="profile-2" role="tabpanel" aria-labelledby="profile-tab-2">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ml-auto text-center" v-else>
+                                            <p class="pt-5">No Event Selected</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='shared/js/vue.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='shared/js/axios.min.js') }}"></script>
+    {#    <script src="{{ url_for('static', filename='admin/plugins/jquery-ui/jquery-ui.min.js')}}"></script>#}
+    {#    <script src="{{ url_for('static', filename='admin/plugins/moment/moment.js')}}"></script>#}
+    {#    <script src="{{ url_for('static', filename='admin/plugins/fullcalendar/js/fullcalendar.min.js')}}"></script>#}
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.3.2/main.min.js"></script>
+    <script>
+
+
+
+    </script>
+    <script>
+        var app = new Vue({
+            el: '#vue-app',
+            delimiters: ['[[',']]'],
+            data: {
+                form: {errors: {}},
+                events: null,
+                selectedEvent: null,
+            },
+            mounted: function(){
+                this.refreshEvents();
+                setTimeout(function () {
+                    $('#calendar').ready(function () {
+                        var calendarEl = document.getElementById('calendar');
+                        var calendar = new FullCalendar.Calendar(calendarEl, {
+                            initialView: 'dayGridMonth'
+                        });
+                        calendar.render();
+                    })
+                }, 3000)
+            },
+            created: function () {
+
+            },
+            computed: {
+                events_current_page(){
+                    if (this.events && this.events.pagination){
+                        let page = this.events.pagination.currentPage.match(/page=(\d*)/);
+                        if (page.length > 1){
+                            return parseInt(page[1]);
+                        }
+                    }
+                    return null;
+                },
+                events_start_page(){
+                    if (this.events && this.events.pagination){
+                        let page = this.events_current_page;
+                        if (page){
+                            let start_page = page-2;
+                            if (start_page < 1){
+                                start_page = 1;
+                            }
+                            return start_page;
+                        }
+                    }
+                    return null;
+                },
+                events_last_page(){
+                    if (this.events && this.events.pagination){
+                        let page = this.events_current_page;
+                        let last_page = this.events.pagination.pages;
+                        if (page && last_page){
+                            let the_last_page = page+2;
+                            if (the_last_page > last_page){
+                                the_last_page = last_page;
+                            }
+                            return the_last_page;
+                        }
+                    }
+                    return null;
+                },
+                events_page_list(){
+                    if (this.events_current_page && this.events_last_page) {
+                        let pages = [];
+                        for (let i = this.events_start_page; i <= this.events_last_page; i++) {
+                            pages.push(i);
+                        }
+                        return pages;
+                    }
+                    return [];
+                }
+            },
+            methods: {
+                submitForm() {
+                    event.preventDefault();
+                    let form = event.target;
+                    let url = $(form).attr('action');
+                    let data = new FormData(form);
+                    const vue = this;
+                    axios.post(url, data )
+                        .then(function (response) {
+                            if (response.data.status === 1) {
+                                vue.refreshEvents();
+                                $('#add-event-modal').modal('hide');
+                                $('#add-programme-modal').modal('hide');
+                                form.reset()
+                                vue.form.errors = []
+                            }
+                            else {
+                                vue.form.errors = response.data.errors
+                            }
+                        });
+                    return false;
+                },
+                refreshEvents(){
+                    let url = "{{ url_for('api.eventy_events_list') }}";
+                    let vue = this;
+                    axios.get(url).then(
+                        function (response) {
+                            if (response.data.status == 1){
+                                const selected = vue.selectedEvent;
+                                vue.events = response.data.events;
+                                if (! selected){
+                                    if (vue.events.data.length > 0){
+                                        vue.selectedEvent = vue.events.data[0];
+                                    }
+                                }
+                                else {
+                                    if (vue.events.data.includes(selected)){
+                                        vue.selectedEvent = selected;
+                                    }
+                                    else {
+                                        if (vue.events.data.length > 0){
+                                            vue.selectedEvent = vue.events.data[0];
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    );
+                },
+                changeSelected(event){
+                    this.selectedEvent = event;
+                },
+                paginate(page){
+                    let vue = this;
+                    event.preventDefault();
+                    let url = "{{ url_for('api.eventy_events_list') }}";
+                    if (page === 'next'){
+                        url = vue.events.pagination.next;
+                    }
+                    else if (page === 'prev'){
+                        url = vue.events.pagination.prev;
+                    }
+                    else {
+                        url = url + '?page='+page+'&size='+this.events.pagination.size
+                    }
+                    axios.get(url).then(
+                        function (response) {
+                            if (response.data.status == 1){
+                                const selected = vue.selectedEvent
+                                vue.events = response.data.events
+                                if (! selected){
+                                    if (vue.events.data.length > 0){
+                                        vue.selectedEvent = vue.events.data[0];
+                                    }
+                                }
+                                else {
+                                    if (vue.events.data.includes(selected)){
+                                        vue.selectedEvent = selected;
+                                    }
+                                    else {
+                                        if (vue.events.data.length > 0){
+                                            vue.selectedEvent = vue.events.data[0];
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    );
+                }
+            }
+        });
+    </script>
+{% endblock %}

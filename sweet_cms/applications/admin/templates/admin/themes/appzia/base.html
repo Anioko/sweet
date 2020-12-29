@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Admin Dashboard" name="description" />
+    <meta content="ThemeDesign" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title> {% block title %}{% endblock %}</title>
+
+    <link rel="shortcut icon" href="{{url_for('static', filename='admin/images/favicon.ico') }}">
+    <link href="{{url_for('static', filename='admin/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{url_for('static', filename='admin/css/icons.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{url_for('static', filename='admin/css/style.css') }}"  rel="stylesheet" type="text/css">
+    {% block styles %}{% endblock %}
+</head>
+<body class="fixed-left">
+<div id="wrapper">
+    <div class="topbar">
+        <div class="topbar-left">
+            <div class="text-center">
+                <a href="{{ url_for('admin.index') }}" class="logo"><img src="{{ url_for('static', filename='admin/images/logo.png') }}" alt="logo-img"></a>
+                <a href="{{ url_for('admin.index') }}" class="logo-sm"><img src="{{ url_for('static', filename='admin/images/logo_sm.png')}}" alt="logo-img"></a>
+            </div>
+        </div>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <ul class="list-inline menu-left mb-0">
+                    <li class="float-left">
+                        <button class="button-menu-mobile open-left waves-light waves-effect">
+                            <i class="mdi mdi-menu"></i>
+                        </button>
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-right float-right list-inline">
+                    <li class="dropdown d-none d-sm-block">
+                        <a href="#" data-target="#" class="dropdown-toggle waves-effect waves-light notification-icon-box" data-toggle="dropdown" aria-expanded="true">
+                            <i class="fa fa-bell"></i> <span class="badge badge-xs badge-danger"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-lg">
+                            <li class="text-center notifi-title">Notification <span class="badge badge-xs badge-success">3</span></li>
+                            <li class="list-group">
+                                <!-- list item-->
+                                <a href="javascript:void(0);" class="list-group-item">
+                                    <div class="media">
+                                        <div class="media-heading">Your order is placed</div>
+                                        <p class="m-0">
+                                            <small>Dummy text of the printing and typesetting industry.</small>
+                                        </p>
+                                    </div>
+                                </a>
+                                <!-- list item-->
+                                <a href="javascript:void(0);" class="list-group-item">
+                                    <div class="media">
+                                        <div class="media-body clearfix">
+                                            <div class="media-heading">New Message received</div>
+                                            <p class="m-0">
+                                                <small>You have 87 unread messages</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <!-- list item-->
+                                <a href="javascript:void(0);" class="list-group-item">
+                                    <div class="media">
+                                        <div class="media-body clearfix">
+                                            <div class="media-heading">Your item is shipped.</div>
+                                            <p class="m-0">
+                                                <small>It is a long established fact that a reader will</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <!-- last list item -->
+                                <a href="javascript:void(0);" class="list-group-item">
+                                    <small class="text-primary">See all notifications</small>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="d-none d-sm-block">
+                        <a href="#" id="btn-fullscreen" class="waves-effect waves-light notification-icon-box"><i class="mdi mdi-fullscreen"></i></a>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle profile waves-effect waves-light" data-toggle="dropdown" aria-expanded="true">
+                            <img src="{{ url_for('static', filename='admin/images/users/avatar-1.jpg') }}" alt="user-img" class="rounded-circle">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><a href="{{ url_for('admin.admin_update', admin_id=current_user.id) }}" class="dropdown-item"> Profile</a></li>
+                            <li><a href="javascript:void(0)" class="dropdown-item">Settings </a></li>
+                            <li class="dropdown-divider"></li>
+                            <li><a href="{{ url_for('base.logout') }}" class="dropdown-item"> Logout</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <!-- Top Bar End -->
+
+
+    <!-- ========== Left Sidebar Start ========== -->
+
+    <div class="left side-menu">
+        <div class="sidebar-inner slimscrollleft">
+
+            <!--<div class="user-details">-->
+            <!--<div class="pull-left">-->
+            <!--<img src="assets/images/users/avatar-1.jpg" alt="" class="thumb-md img-circle">-->
+            <!--</div>-->
+            <!--<div class="user-info">-->
+            <!--<div class="dropdown">-->
+            <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">David Cooper <span class="caret"></span></a>-->
+            <!--<ul class="dropdown-menu">-->
+            <!--<li><a href="javascript:void(0)"><i class="md md-face-unlock"></i> Profile<div class="ripple-wrapper"></div></a></li>-->
+            <!--<li><a href="javascript:void(0)"><i class="md md-settings"></i> Settings</a></li>-->
+            <!--<li><a href="javascript:void(0)"><i class="md md-lock"></i> Lock screen</a></li>-->
+            <!--<li><a href="javascript:void(0)"><i class="md md-settings-power"></i> Logout</a></li>-->
+            <!--</ul>-->
+            <!--</div>-->
+
+            <!--<p class="text-muted m-0">Admin</p>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--- Divider -->
+
+
+            <div id="sidebar-menu">
+                <ul>
+                    <li class="menu-title">Menu</li>
+                    <li>
+                        <a href="{{ url_for('admin.index') }}" class="waves-effect"><i class="mdi mdi-home"></i><span> Dashboard </span></a>
+                    </li>
+                    <li class="has_sub">
+                        <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-album"></i> <span>Base</span> <span class="float-right"><i class="mdi mdi-plus"></i></span></a>
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="{{ url_for('admin.admin_list')}}" class="waves-effect {% if 'admin.admin_' in request.endpoint %}active{% endif %}" ><i class="mdi mdi-account"></i><span> Admins </span></a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('admin.user_list') }}" class="waves-effect {% if 'admin.user_' in request.endpoint %}active{% endif %}"><i class="mdi mdi-account-multiple"></i><span> Users </span></a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('admin.seo_list')}}" class="waves-effect {% if 'admin.seo_' in request.endpoint %}active{% endif %}"><i class="mdi mdi-image"></i><span> SEO </span></a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('admin.settings')}}" class="waves-effect {% if 'admin.settings' in request.endpoint %}active{% endif %}"><i class="mdi mdi-settings"></i><span> Settings </span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="has_sub">
+                        <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-view-module"></i> <span>Modules</span> <span class="float-right"><i class="mdi mdi-plus"></i></span></a>
+                        <ul class="list-unstyled">
+                            <li><a href="{{ url_for('admin.module_list') }}" class="waves-effect {% if 'admin.module_' in request.endpoint %}active{% endif %}"><i class="mdi mdi-view-module"></i><span> Modules </span></a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    {% for sweet_app in sweet_apps %}
+                        {% if sweet_app.side_menu %}
+                            {% include themed(sweet_app.side_menu, 'admin') %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+        </div> <!-- end sidebarinner -->
+    </div>
+    <!-- Left Sidebar End -->
+
+    <!-- Start right Content here -->
+
+    <div class="content-page">
+        <!-- Start content -->
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+        <footer class="footer">
+            © 2020 Sweet CMS - All Rights Reserved.
+        </footer>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='admin/js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/js/modernizr.min.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/js/detect.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/js/fastclick.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/js/jquery.slimscroll.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/js/jquery.blockUI.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/js/waves.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/js/wow.min.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/js/jquery.nicescroll.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/js/jquery.scrollTo.min.js') }}"></script>
+<script src="{{ url_for('static', filename='admin/js/app.js') }}"></script>
+{% block scripts %}{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+<script src="{{ url_for('static', filename='admin/js/custom.js') }}"></script>
+</body>
+</html>

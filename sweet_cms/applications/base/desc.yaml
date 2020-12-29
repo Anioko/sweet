@@ -1,0 +1,5 @@
+name: Base
+version: 0.01
+prefix: '/'
+license_key: ''
+has_models: false
