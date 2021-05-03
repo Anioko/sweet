@@ -46,7 +46,7 @@ mysql-connector==2.2.9
 Flask-RESTful==0.3.8
 Flask-Session@git+https://github.com/rayluo/flask-session@ea8351438e4c79bad59429a43dd662c167c32a32
 flask-marshmallow==0.14.0
-marshmallow-sqlalchemy==0.24.0
+marshmallow-sqlalchemy==0.25.0
 GitPython==3.1.11
 flask-reverse-proxy-fix@git+https://github.com/eibrahim995/flask-reverse-proxy-fix.git@8dafa59f34600b2dfd5ef5067997677ffd1d58b6
 flask-rest-paginate==0.1.5
