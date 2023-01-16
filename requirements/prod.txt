@@ -52,7 +52,7 @@ flask-reverse-proxy-fix@git+https://github.com/eibrahim995/flask-reverse-proxy-f
 flask-rest-paginate==0.1.5
 pyopenssl
 redis==3.5.3
-rq==1.6.1
+rq==1.12.0
 Flask-RQ==0.2
 python-ffmpeg-video-streaming==0.1.14
 ffmpeg-python===0.2.0
